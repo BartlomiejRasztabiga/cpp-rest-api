@@ -16,6 +16,7 @@ public:
     void setName(char *name);
     int getId();
     void setId();
+    void setId(int id);
 
 private:
     static int nextId;

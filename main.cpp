@@ -3,8 +3,13 @@
 #include "UserService.h"
 
 void getMethod(char *uri, UserService &userService);
+
 void postMethod(char *uri, char *data, UserService &userService);
-char* getUriElement(char *uri, short index);
+
+void putMethod(char *uri, char *data, UserService &userService);
+
+char *getUriElement(char *uri, short index);
+
 int getIdFromUri(char *uri);
 
 int main() {
@@ -34,15 +39,16 @@ int main() {
         } else if (strcmp(method, "POST") == 0) {
             postMethod(uri, data, *userService);
         } else if (strcmp(method, "PUT") == 0) {
-
+            putMethod(uri, data, *userService);
         } else if (strcmp(method, "DELETE") == 0) {
 
         } else {
             std::printf("Nie rozpoznano takiej metody http: %s \n", method);
         }
 
-        delete [] uri;
-        delete [] method;
+
+        delete[] uri;
+        delete[] method;
 
     }
 
@@ -53,7 +59,7 @@ void getMethod(char *uri, UserService &userService) {
     if (strcmp(uri, "/user") == 0) {
         User *users = userService.getAllUsers();
         for (int i = 0; i < userService.getUsersSize(); ++i) {
-            printf("%s \n", users[i].getName());
+            printf("%d %s \n", users[i].getId(), users[i].getName());
         }
     } else if (strstr(uri, "/user/") != NULL) {
         User user = userService.getUser(getIdFromUri(uri));
@@ -61,7 +67,10 @@ void getMethod(char *uri, UserService &userService) {
             printf("404 User not exists \n");
             return;
         }
-        printf("%s \n", user.getName());
+        printf("%d %s \n", user.getId(), user.getName());
+    } else {
+        printf("400 Bad request \n");
+        return;
     }
 
     //TODO GETy na ID
@@ -78,18 +87,47 @@ void postMethod(char *uri, char *data, UserService &userService) {
     } else if (strstr(uri, "/user/") != NULL) {
         printf("405 Method not allowed \n");
         return;;
+    } else {
+        printf("400 Bad request \n");
+        return;
+    }
+}
+
+void putMethod(char *uri, char *data, UserService &userService) {
+    if (strstr(uri, "/user/") != NULL) {
+        int id = getIdFromUri(uri);
+        User *user = new User;
+        user->setName(data);
+        user->setId(id);
+
+        userService.updateUser(id, *user);
+    } else {
+        printf("400 Bad request \n");
+        return;;
+    }
+}
+
+void deleteMethod(char *uri, char *data, UserService &userService) {
+    if (strstr(uri, "/user/") != NULL) {
+        int id = getIdFromUri(uri);
+        if (userService.deleteUser(id) != 0) {
+            printf("404 User not found");
+            return;
+        }
+    } else {
+        printf("400 Bad request \n");
+        return;
     }
 }
 
 int getIdFromUri(char *uri) {
-    char* userId = getUriElement(uri, 1);
+    char *userId = getUriElement(uri, 1);
     int id = *userId - '0';
 
     return id;
 }
 
-char* getUriElement(char *uri, short index)
-{
+char *getUriElement(char *uri, short index) {
     char *token;
     token = strdup(uri);
     token = strtok(token, "/");

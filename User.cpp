@@ -37,4 +37,8 @@ void User::setId() {
     this->nextId++;
 }
 
+void User::setId(int id) {
+    this->id = id;
+}
+
 int User::nextId = 1;

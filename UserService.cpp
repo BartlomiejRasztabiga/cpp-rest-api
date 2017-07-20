@@ -44,4 +44,26 @@ User UserService::getUser(int id) {
 
 }
 
+void UserService::updateUser(int id, User &user) {
+    for(int i = 0; i < usersSize; i++) {
+        if (users[i].getId() == id) {
+            users[i] = user;
+        }
+    }
+}
+
+int UserService::deleteUser(int id) {
+    User user = getUser(id);
+    if (user.getId() == 0) return -1;
+
+    for(int i = 0; i < usersSize; i++) {
+        if (users[i].getId() == id) {
+            //TODO users[i] = 0; co tu ustawiac
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
 

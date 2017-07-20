@@ -16,6 +16,8 @@ public:
     int getUsersSize();
     void addUser(User &user);
     User getUser(int id);
+    void updateUser(int id, User &user);
+    int deleteUser(int id);
 
 private:
     User *users;
