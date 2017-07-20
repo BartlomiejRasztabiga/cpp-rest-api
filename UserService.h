@@ -14,11 +14,11 @@ public:
     ~UserService();
     User* getAllUsers();
     int getUsersSize();
-    void addUser(User user);
+    void addUser(User &user);
     User getUser(int id);
 
 private:
-    User users[100];
+    User *users;
     int usersSize;
 };
 

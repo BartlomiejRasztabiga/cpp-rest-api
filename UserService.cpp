@@ -7,11 +7,16 @@
 
 
 UserService::UserService() {
+    this->users = new User[100];
     this->usersSize = 0;
 }
 
 UserService::~UserService() {
+/*    for (int i = 0; i < usersSize; ++i) {
+        delete users[i];
+    }*/
 
+    delete [] users;
 }
 
 User *UserService::getAllUsers() {
@@ -22,7 +27,7 @@ int UserService::getUsersSize() {
     return usersSize;
 }
 
-void UserService::addUser(User user) {
+void UserService::addUser(User &user) {
     users[usersSize] = user;
     usersSize++;
 }

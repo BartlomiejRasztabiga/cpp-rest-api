@@ -11,9 +11,9 @@ int main() {
     UserService *userService = new UserService();
 
     while (true) {
-        char uri[100];
-        char method[10];
-        char data[100];
+        char *uri = new char[100];
+        char *method = new char[100];
+        char *data = new char[100];
 
         std::printf("Enter URI \n");
         std::gets(uri);
@@ -41,6 +41,8 @@ int main() {
             std::printf("Nie rozpoznano takiej metody http: %s \n", method);
         }
 
+        delete [] uri;
+        delete [] method;
 
     }
 
